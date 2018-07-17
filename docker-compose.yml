@@ -1,0 +1,9 @@
+version: '3'
+services:
+  cloudflare-dns-tls:
+    image: ryansaunders/cloudflare-dns-docker
+    container_name: cloudflare-dns-docker
+    ports:
+      - 53:53/udp
+    network_mode: bridge
+    restart: always
