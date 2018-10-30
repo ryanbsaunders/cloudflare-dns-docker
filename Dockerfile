@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt update && apt -y upgrade && apt -y install unbound && apt clean && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt -y upgrade && apt -y install unbound ca-certificates&& apt clean && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 53/udp
 
