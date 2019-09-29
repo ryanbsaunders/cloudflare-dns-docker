@@ -5,5 +5,16 @@ services:
     container_name: cloudflare-dns-docker
     ports:
       - 53:53/udp
-    network_mode: bridge
-    restart: "no"
+    networks: 
+      macvlan_dns:
+        ipv4_address: ${UNBOUND_IPV4_ADDRESS}
+    restart: unless-stopped
+
+networks:
+  macvlan_dns:
+    driver: macvlan
+    driver_opts:
+      parent: ${UNBOUND_PARENT_INTERFACE}
+    ipam:
+      config:
+        - subnet: ${UNBOUND_IPV4_SUBNET}
