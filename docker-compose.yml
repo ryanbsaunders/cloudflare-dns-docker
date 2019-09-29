@@ -9,6 +9,14 @@ services:
       macvlan_dns:
         ipv4_address: ${UNBOUND_IPV4_ADDRESS}
     restart: unless-stopped
+    logging:
+      driver: splunk
+      options:
+        splunk-token: ${SPLUNK_TOKEN}
+        splunk-url: ${SPLUNK_URL}
+        splunk-insecureskipverify: "true"
+        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+        labels: "unbound-dns"
 
 networks:
   macvlan_dns:
