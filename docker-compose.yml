@@ -4,11 +4,8 @@ services:
     image: ryansaunders/cloudflare-dns-docker
     container_name: cloudflare-dns-docker
     ports:
-      - 53:53/udp
-    networks: 
-      macvlan_dns:
-        ipv4_address: ${UNBOUND_IPV4_ADDRESS}
-    restart: unless-stopped
+      - 853:53/udp
+    restart: always
     logging:
       driver: splunk
       options:
@@ -17,12 +14,3 @@ services:
         splunk-insecureskipverify: "true"
         tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
         labels: "unbound-dns"
-
-networks:
-  macvlan_dns:
-    driver: macvlan
-    driver_opts:
-      parent: ${UNBOUND_PARENT_INTERFACE}
-    ipam:
-      config:
-        - subnet: ${UNBOUND_IPV4_SUBNET}
