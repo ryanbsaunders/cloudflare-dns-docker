@@ -1,16 +1,38 @@
 version: '3'
 services:
-  cloudflare-dns-tls:
+  unbound:
+    container_name: unbound
     image: ryansaunders/cloudflare-dns-docker
-    container_name: cloudflare-dns-docker
     ports:
       - 853:53/udp
-    restart: always
-    logging:
-      driver: splunk
-      options:
-        splunk-token: ${SPLUNK_TOKEN}
-        splunk-url: ${SPLUNK_URL}
-        splunk-insecureskipverify: "true"
-        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
-        labels: "unbound-dns"
+    restart: unless-stopped
+    networks:
+      internaldns:
+        ipv4_address: 192.168.2.2
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80/tcp"
+    environment:
+      - TZ=America/New York
+      - WEBPASSWORD=${WEBPASSWORD}
+      - DNS1=192.168.2.2
+      - DNS2=no
+      - DNSMASQ_LISTENING=all
+    networks:
+      internaldns:
+        ipv4_address: 192.168.2.3
+    dns:
+      - 192.168.1.1
+      - 127.0.0.1
+    restart: unless-stopped
+networks:
+  internaldns:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.2.0/24
