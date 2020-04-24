@@ -1,0 +1,7 @@
+# custom domain blocklist
+
+clientdata.ssl.sonos.com
+msmetrics-test.ws.sonos.com
+msmetrics.ws.sonos.com
+sonar.ws.sonos.com
+tracking.dyson.com
