@@ -1,0 +1,5 @@
+FROM pihole/pihole:latest
+
+COPY custom_blocklist.txt /etc/pihole
+
+RUN echo "https://raw.githubusercontent.com/ryanbsaunders/cloudflare-dns-docker/master/custom_blocklist.txt" >> /etc/pihole/adlists.list
