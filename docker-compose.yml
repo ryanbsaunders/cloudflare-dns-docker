@@ -11,9 +11,7 @@ services:
         ipv4_address: 192.168.2.2
 
   pihole:
-    build:
-      context: .
-      dockerfile: Dockerfile-pihole
+    image: pihole/pihole:latest
     container_name: pihole
     ports:
       - "53:53/tcp"
@@ -25,13 +23,36 @@ services:
       - DNS1=192.168.2.2
       - DNS2=no
       - DNSMASQ_LISTENING=all
+      - RATE_LIMIT=0/0
+      - QUERY_LOGGING=true
     networks:
       internaldns:
         ipv4_address: 192.168.2.3
+      proxy:
     dns:
       - 192.168.1.1
       - 127.0.0.1
     restart: unless-stopped
+    volumes:
+      - './etc-pihole/:/etc/pihole/'
+      - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+    labels:
+      - "traefik.http.routers.pihole.rule=Host(`pihole1.kc8zyv.com`)"
+      - "traefik.frontend.rule=Host:pihole1.kc8zyv.com"
+      - "traefik.http.services.pihole.loadbalancer.server.port=80"
+      - "traefik.enable=true"
+      - "traefik.http.routers.pihole.tls=true"
+      - "traefik.http.routers.pihole.tls.certresolver=certificato"
+      - "--accesslog.format=json"
+    logging:
+      driver: splunk
+      options:
+        splunk-token: ${SPLUNK_TOKEN}
+        splunk-url: ${SPLUNK_URL}
+        splunk-insecureskipverify: "true"
+        splunk-format: "json"
+        tag: "{{.ImageName}}/{{.Name}}"
+        labels: "pihole"
 
 networks:
   internaldns:
@@ -39,3 +60,4 @@ networks:
     ipam:
       config:
         - subnet: 192.168.2.0/24
+  proxy:
