@@ -36,6 +36,7 @@ services:
     volumes:
       - './etc-pihole/:/etc/pihole/'
       - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+      - './var-log/:/var/log/'
     labels:
       - traefik.http.routers.pihole.rule=Host(`${PIHOLE_HOST}`)
       - traefik.frontend.rule=Host:"${PIHOLE_HOST}"
