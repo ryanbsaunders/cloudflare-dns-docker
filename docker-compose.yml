@@ -45,15 +45,6 @@ services:
       - traefik.http.routers.pihole.tls=true
       - traefik.http.routers.pihole.tls.certresolver=certificato
       - --accesslog.format=json
-    logging:
-      driver: splunk
-      options:
-        splunk-token: ${SPLUNK_TOKEN}
-        splunk-url: ${SPLUNK_URL}
-        splunk-insecureskipverify: "true"
-        splunk-format: "json"
-        tag: "{{.ImageName}}/{{.Name}}"
-        labels: "pihole"
 
 networks:
   internaldns:
