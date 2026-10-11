@@ -29,6 +29,8 @@ services:
       - FTLCONF_dns_rateLimit_count=0
       - FTLCONF_dns_queryLogging=true
       - FTLCONF_misc_extraLogging=true
+      # honor TTLs: never answer from an expired cache entry (any negative value disables it)
+      - FTLCONF_dns_cache_optimizer=-1
     networks:
       internaldns:
         ipv4_address: 192.168.2.3
