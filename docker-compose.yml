@@ -9,6 +9,9 @@ services:
     networks:
       internaldns:
         ipv4_address: 192.168.2.2
+    volumes:
+      - './unbound.conf:/etc/unbound/unbound.conf:ro'
+      - './var-log/unbound/:/var/log/unbound/'
 
   pihole:
     image: pihole/pihole:latest
